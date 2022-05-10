@@ -1,4 +1,5 @@
 {
+	"status": "sukces",
 	"grafik": [
 		{
 			"dzien": "Poniedziałek",
@@ -7,7 +8,7 @@
 			"poziom": "P2",
 			"uwagi": [ "kurs trwa", "można dołączyć", "✅ MULTISPORT" ],
 			"instruktor": "Agnieszka",
-			"zapisy": "Dostępne"
+			"zapisy": "WOLNE MIEJSCA"
 		},
 		{
 			"dzien": "Poniedziałek",
