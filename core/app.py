@@ -3,6 +3,7 @@ from flask import request
 import os
 import requests
 from bs4 import BeautifulSoup, Tag
+import re
 
 app = Flask(__name__)
 
@@ -48,9 +49,53 @@ def get_schedule(day: str, time: str, course: str, level: str, notes: str, instr
     for tr in trs:
         tds: list[Tag] = tr.find_all("td")
         lesson = Lesson(tds)
+
+        if not match_filter(lesson, day, time, course, level, notes, instructor, enrollment):
+            continue
+
         schedule["grafik"].append(lesson.as_dict())
     
     return schedule
+
+def match_filter(lesson: 'Lesson', day: str, time: str, course: str, level: str, notes: str, instructor: str, enrollment: str) -> bool:
+
+    if day:
+        day = re.escape(day)
+        if not re.match(day, lesson.day, re.IGNORECASE):
+            return False
+
+    if time:
+        time = re.sub(" ", "", time)
+        time = re.escape(time)
+        if not (re.search(f"{time}:", lesson.time) or re.match(time, re.sub(" ", "", lesson.time))):
+            return False
+
+    if course:
+        course = re.escape(course)
+        if not re.search(course, lesson.course, re.IGNORECASE):
+            return False
+
+    if level:
+        level = re.escape(level)
+        if not re.search(level, lesson.level, re.IGNORECASE):
+            return False
+
+    if notes:
+        notes = re.escape(notes)
+        if not re.search(notes, ";".join(lesson.notes), re.IGNORECASE):
+            return False
+
+    if instructor:
+        instructor = re.escape(instructor)
+        if not re.search(instructor, lesson.instructor, re.IGNORECASE):
+            return False
+
+    if enrollment:
+        enrollment = re.escape(enrollment)
+        if not re.match(enrollment, lesson.enrollment, re.IGNORECASE):
+            return False
+
+    return True
 
 def get_error(status_code: int) -> dict:
     error = {
