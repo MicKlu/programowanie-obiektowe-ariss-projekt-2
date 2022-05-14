@@ -37,25 +37,28 @@ def get_schedule(day: str, time: str, course: str, level: str, notes: str, instr
     if response.status_code != 200:
         return get_error(response.status_code)
 
-    bs = BeautifulSoup(response.content, 'html.parser')
-    table: Tag = bs.find("table", id="table_1")
-    trs: 'list[Tag]' = table.tbody.find_all("tr")
+    try:
+        bs = BeautifulSoup(response.content, 'html.parser')
+        table: Tag = bs.find("table", id="table_1")
+        trs: 'list[Tag]' = table.tbody.find_all("tr")
     
-    schedule = {
-        "status": "sukces",
-        "grafik": []
-    }
+        schedule = {
+            "status": "sukces",
+            "grafik": []
+        }
 
-    for tr in trs:
-        tds: 'list[Tag]' = tr.find_all("td")
-        lesson = Lesson(tds)
+        for tr in trs:
+            tds: 'list[Tag]' = tr.find_all("td")
+            lesson = Lesson(tds)
 
-        if not match_filter(lesson, day, time, course, level, notes, instructor, enrollment):
-            continue
+            if not match_filter(lesson, day, time, course, level, notes, instructor, enrollment):
+                continue
 
-        schedule["grafik"].append(lesson.as_dict())
+            schedule["grafik"].append(lesson.as_dict())
     
-    return schedule
+        return schedule
+    except:
+        return get_error(info="Nie można sparsować strony")
 
 def match_filter(lesson: 'Lesson', day: str, time: str, course: str, level: str, notes: str, instructor: str, enrollment: str) -> bool:
 
@@ -97,13 +100,16 @@ def match_filter(lesson: 'Lesson', day: str, time: str, course: str, level: str,
 
     return True
 
-def get_error(status_code: int) -> dict:
+def get_error(status_code: int=None, info: str=None) -> dict:
     error = {
         "status": "błąd",
     }
 
     if status_code is not None:
         error["kod"] = status_code
+
+    if info is not None:
+        error["info"] = info
 
     return error
 

@@ -1,4 +1,5 @@
 {
 	"status": "błąd",
-	"kod": 404
+	"kod": 404,
+	"info": "Nie odnaleziono strony"
 }
