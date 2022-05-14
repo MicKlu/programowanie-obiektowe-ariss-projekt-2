@@ -39,7 +39,7 @@ def get_schedule(day: str, time: str, course: str, level: str, notes: str, instr
 
     bs = BeautifulSoup(response.content, 'html.parser')
     table: Tag = bs.find("table", id="table_1")
-    trs: list[Tag] = table.tbody.find_all("tr")
+    trs: 'list[Tag]' = table.tbody.find_all("tr")
     
     schedule = {
         "status": "sukces",
@@ -47,7 +47,7 @@ def get_schedule(day: str, time: str, course: str, level: str, notes: str, instr
     }
 
     for tr in trs:
-        tds: list[Tag] = tr.find_all("td")
+        tds: 'list[Tag]' = tr.find_all("td")
         lesson = Lesson(tds)
 
         if not match_filter(lesson, day, time, course, level, notes, instructor, enrollment):
@@ -109,7 +109,7 @@ def get_error(status_code: int) -> dict:
 
 class Lesson:
 
-    def __init__(self, tds: list[Tag]):
+    def __init__(self, tds: 'list[Tag]'):
         self.day = tds[1].text
         self.time = tds[2].text
         self.course = tds[3].text
