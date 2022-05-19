@@ -32,12 +32,13 @@ def index():
 
 def get_schedule(day: str, time: str, course: str, level: str, notes: str, instructor: str, enrollment: str) -> dict:
 
-    response = requests.get("https://www.dancefusion.com.pl/grafik/")
-
-    if response.status_code != 200:
-        return get_error(response.status_code)
-
     try:
+        response = requests.get("https://www.dancefusion.com.pl/grafik")
+
+        if response.status_code != 200:
+            return get_error(status_code=response.status_code, info="Błąd odpowiedzi serwera")
+
+    
         bs = BeautifulSoup(response.content, 'html.parser')
         table: Tag = bs.find("table", id="table_1")
         trs: 'list[Tag]' = table.tbody.find_all("tr")
@@ -57,6 +58,8 @@ def get_schedule(day: str, time: str, course: str, level: str, notes: str, instr
             schedule["grafik"].append(lesson.as_dict())
     
         return schedule
+    except requests.exceptions.ConnectionError:
+        return get_error(info="Nie można nawiązać połączenia z serwerem")
     except:
         return get_error(info="Nie można sparsować strony")
 
