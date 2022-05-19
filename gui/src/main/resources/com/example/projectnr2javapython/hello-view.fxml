@@ -10,7 +10,7 @@
       <Insets topRightBottomLeft="10.0" />
    </padding>
    <HBox spacing="5">
-      <ComboBox fx:id="WyborDnia" onAction="#dzienWybrany" prefWidth="150.0" maxWidth="Infinity" promptText="Wybierz Dzień..." HBox.hgrow="ALWAYS" />
+      <ComboBox fx:id="wyborDnia" onAction="#dzienWybrany" prefWidth="150.0" maxWidth="Infinity" promptText="Wybierz Dzień..." HBox.hgrow="ALWAYS" />
       <ComboBox fx:id="wyborGodziny" prefWidth="150.0" promptText="Wybierz godzinę..." maxWidth="Infinity" HBox.hgrow="ALWAYS" />
       <Button onAction="#onWczytajButtonClick" text="Pokaż Zajęcia" />
       <Button onAction="#onHelpButtonClicked" text="Pomoc" />
@@ -20,8 +20,8 @@
       <Label text="Pobieranie danych..." />
    </HBox>
    <Label text="Zajęcia:"/>
-   <ListView fx:id="HarmonogramList" onMouseClicked="#handleMouseClicked" prefHeight="200.0" prefWidth="200.0"
+   <ListView fx:id="harmonogramList" onMouseClicked="#handleMouseClicked" prefHeight="200.0" prefWidth="200.0"
              VBox.vgrow="ALWAYS"/>
    <Label text="Detali zajęć:"/>
-   <ListView fx:id="DetaleList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
+   <ListView fx:id="detaleList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
 </VBox>

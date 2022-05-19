@@ -19,6 +19,6 @@
           text="Aby zobaczyć detali konkretnych zajęć należy zaznaczyć/kliknąć na wybrane zajęcia w oknie &quot;Zajęcia&quot;. Dostępna informacja pojawi się w oknie &quot;Detali zajęć&quot; poniżej."
           wrapText="true"/>
    <HBox alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">
-      <Button fx:id="ZamknijButton" onAction="#onZamknijButtonClicked" text="Zamknij" />
+      <Button fx:id="zamknijButton" onAction="#onZamknijButtonClicked" text="Zamknij" />
    </HBox>
 </VBox>

@@ -35,16 +35,16 @@ public class HelloController {
     private Stage stage;
 
     @FXML
-    private ComboBox<String> WyborDnia;
+    private ComboBox<String> wyborDnia;
 
     @FXML
     public ComboBox<String> wyborGodziny;
 
     @FXML
-    private ListView<String> HarmonogramList;
+    private ListView<String> harmonogramList;
 
     @FXML
-    private ListView<String> DetaleList;
+    private ListView<String> detaleList;
 
     @FXML
     private HBox pobieranieDanych;
@@ -53,22 +53,27 @@ public class HelloController {
     private String dzien = "";
     private static JSONObject json = null;
 
-    public void setJson(String text){
+    public void setJson(String text) {
         json = new JSONObject(text);
     }
-    public JSONObject getJson(){
+
+    public JSONObject getJson() {
         return json;
     }
-    public void setWybranyElement(int we){
+
+    public void setWybranyElement(int we) {
         this.wybranyElement = we;
     }
-    public int getWybranyElement(){
+
+    public int getWybranyElement() {
         return wybranyElement;
     }
+
     public void setDzien(String dzien) {
         this.dzien = dzien;
     }
-    public String getDzien(){
+
+    public String getDzien() {
         return dzien;
     }
 
@@ -78,14 +83,14 @@ public class HelloController {
 
     @FXML
     public void initialize() {
-        WyborDnia.getItems().add("Wszystkie dni");
-        WyborDnia.getItems().add("Poniedziałek");
-        WyborDnia.getItems().add("Wtorek");
-        WyborDnia.getItems().add("Środa");
-        WyborDnia.getItems().add("Czwartek");
-        WyborDnia.getItems().add("Piątek");
-        WyborDnia.getItems().add("Sobota");
-        WyborDnia.getItems().add("Niedziela");
+        wyborDnia.getItems().add("Wszystkie dni");
+        wyborDnia.getItems().add("Poniedziałek");
+        wyborDnia.getItems().add("Wtorek");
+        wyborDnia.getItems().add("Środa");
+        wyborDnia.getItems().add("Czwartek");
+        wyborDnia.getItems().add("Piątek");
+        wyborDnia.getItems().add("Sobota");
+        wyborDnia.getItems().add("Niedziela");
 
         wyborGodziny.getItems().add("Dowolna");
         for(int i = 0; i < 24; i++)
@@ -115,18 +120,18 @@ public class HelloController {
 
     @FXML
     public void dzienWybrany() {
-        setWybranyElement(WyborDnia.getSelectionModel().getSelectedIndex());
+        setWybranyElement(wyborDnia.getSelectionModel().getSelectedIndex());
         System.out.println(getWybranyElement());
         if(getWybranyElement() == 0)
             setDzien("");
         else
-            setDzien(WyborDnia.getItems().get(getWybranyElement()));
+            setDzien(wyborDnia.getItems().get(getWybranyElement()));
         System.out.println("Wybrany dzień to " + getDzien());
     }
     
     public void drukujDetali(JSONObject json1) {
-        DetaleList.getItems().clear();
-        int a = HarmonogramList.getSelectionModel().getSelectedIndex();
+        detaleList.getItems().clear();
+        int a = harmonogramList.getSelectionModel().getSelectedIndex();
 
         if(a == -1)
             return;
@@ -138,16 +143,16 @@ public class HelloController {
 
         JSONObject jsonObject = jsonGrafik.getJSONObject(a);
         System.out.println(jsonObject.toString());
-        DetaleList.getItems().add("Instruktor: " + jsonObject.getString("instruktor"));
-        DetaleList.getItems().add("Poziom: " + jsonObject.getString("poziom"));
-        DetaleList.getItems().add("Zapisy: " + jsonObject.getString("zapisy"));
+        detaleList.getItems().add("Instruktor: " + jsonObject.getString("instruktor"));
+        detaleList.getItems().add("Poziom: " + jsonObject.getString("poziom"));
+        detaleList.getItems().add("Zapisy: " + jsonObject.getString("zapisy"));
         JSONArray uwagi = jsonObject.getJSONArray("uwagi");
 
         ArrayList<String> uwagi_list = new ArrayList<>();
         for(Object uwaga : uwagi)
             uwagi_list.add(uwaga.toString());
 
-        DetaleList.getItems().add("Uwagi: " + String.join(", ", uwagi_list));
+        detaleList.getItems().add("Uwagi: " + String.join(", ", uwagi_list));
     }
 
     public String getTekstStrony() throws IOException {
@@ -181,17 +186,17 @@ public class HelloController {
         return text.toString();
     }
 
-    public void pokazGrafik(String text) {
+    public void pokazGrafik() {
         JSONArray jsonGrafik = getJson().getJSONArray("grafik");
         int liczbaZajec = jsonGrafik.length();
         System.out.println("liczba zajec = " + liczbaZajec);
         if(liczbaZajec != 0) {
             for (int a = 0; a < liczbaZajec; a++) {
                 JSONObject jsonObject = jsonGrafik.getJSONObject(a);
-                HarmonogramList.getItems().add(jsonObject.getString("dzien") + "  " + jsonObject.getString("godziny") + "  " + jsonObject.getString("kurs"));
+                harmonogramList.getItems().add(jsonObject.getString("dzien") + "  " + jsonObject.getString("godziny") + "  " + jsonObject.getString("kurs"));
             }
         } else
-            HarmonogramList.getItems().add("Nie znaleziono zajęć spełniających podane kryteria.");
+            harmonogramList.getItems().add("Nie znaleziono zajęć spełniających podane kryteria.");
     }
 
     @FXML
@@ -201,8 +206,8 @@ public class HelloController {
 
     @FXML
     protected void onWczytajButtonClick() {
-        HarmonogramList.getItems().clear();
-        DetaleList.getItems().clear();
+        harmonogramList.getItems().clear();
+        detaleList.getItems().clear();
         pobieranieDanych.setVisible(true);
 
         ExecutorService executorService = Executors.newSingleThreadExecutor(r -> {
@@ -220,7 +225,7 @@ public class HelloController {
                     JSONObject json = getJson();
                     String status = json.getString("status");
                     if(status.equals("sukces"))
-                        pokazGrafik(text);
+                        pokazGrafik();
                     else
                         pokazBlad(json.getString("info"));
                 });
