@@ -77,6 +77,12 @@ public class HelloController {
         primaryStage.setScene(scene);
         primaryStage.initModality(Modality.WINDOW_MODAL);
         primaryStage.initOwner(((Button)actionEvent.getSource()).getScene().getWindow());
+
+        primaryStage.setMinWidth(250);
+        primaryStage.setMinHeight(300);
+
+        primaryStage.sizeToScene();
+
         primaryStage.show();
     }
 
