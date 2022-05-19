@@ -115,28 +115,30 @@ public class HelloController {
         System.out.println("Wybrany dzień to " + getDzien());
     }
     
-    public void drukujDetali(JSONObject json1){
-        if(json1 == null) {
-            System.out.println("JSON pusty");
-            return;
-        }
+    public void drukujDetali(JSONObject json1) {
         DetaleList.getItems().clear();
         int a = HarmonogramList.getSelectionModel().getSelectedIndex();
+
+        if(a == -1)
+            return;
+
         JSONArray jsonGrafik = json1.getJSONArray("grafik");
-        if(!jsonGrafik.isEmpty()) {
-            JSONObject jsonObject = jsonGrafik.getJSONObject(a);
-            System.out.println(jsonObject.toString());
-            DetaleList.getItems().add("Instruktor: " + jsonObject.getString("instruktor"));
-            DetaleList.getItems().add("Poziom: " + jsonObject.getString("poziom"));
-            DetaleList.getItems().add("Zapisy: " + jsonObject.getString("zapisy"));
-            JSONArray uwagi = jsonObject.getJSONArray("uwagi");
 
-            ArrayList<String> uwagi_list = new ArrayList<>();
-            for(Object uwaga : uwagi)
-                uwagi_list.add(uwaga.toString());
+        if(jsonGrafik.isEmpty())
+            return;
 
-            DetaleList.getItems().add("Uwagi: " + String.join(", ", uwagi_list));
-        }
+        JSONObject jsonObject = jsonGrafik.getJSONObject(a);
+        System.out.println(jsonObject.toString());
+        DetaleList.getItems().add("Instruktor: " + jsonObject.getString("instruktor"));
+        DetaleList.getItems().add("Poziom: " + jsonObject.getString("poziom"));
+        DetaleList.getItems().add("Zapisy: " + jsonObject.getString("zapisy"));
+        JSONArray uwagi = jsonObject.getJSONArray("uwagi");
+
+        ArrayList<String> uwagi_list = new ArrayList<>();
+        for(Object uwaga : uwagi)
+            uwagi_list.add(uwaga.toString());
+
+        DetaleList.getItems().add("Uwagi: " + String.join(", ", uwagi_list));
     }
 
     public String getTekstStrony() throws IOException {
@@ -171,7 +173,7 @@ public class HelloController {
                 HarmonogramList.getItems().add(jsonObject.getString("dzien") + "  " + jsonObject.getString("godziny") + "  " + jsonObject.getString("kurs"));
             }
         } else
-            HarmonogramList.getItems().add("W wybranum dniu nie ma zajęć.");
+            HarmonogramList.getItems().add("W wybranym dniu nie ma zajęć.");
     }
 
     @FXML
