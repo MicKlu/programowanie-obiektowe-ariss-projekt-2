@@ -1,38 +1,35 @@
 package com.example.projectnr2javapython;
 
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class HelloController {
 
     @FXML
-    private ComboBox WyborDnia;
+    private ComboBox<String> WyborDnia;
 
     @FXML
-    private ListView HarmonogramList;
+    private ListView<String> HarmonogramList;
 
     @FXML
-    private ListView DetaleList;
-
-    @FXML
-    private Button PomocButton;
+    private ListView<String> DetaleList;
 
     private int wybranyElement;
     private String dzien;
@@ -70,26 +67,27 @@ public class HelloController {
     }
 
     @FXML
-    private void onHelpButtonClicked() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("HelpScene.fxml"));
+    private void onHelpButtonClicked(ActionEvent actionEvent) throws IOException {
 
-        Scene scene = new Scene(root);
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("HelpScene.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+
         Stage primaryStage = new Stage();
         primaryStage.setTitle("Pomoc");
         primaryStage.setScene(scene);
-
         primaryStage.initModality(Modality.WINDOW_MODAL);
+        primaryStage.initOwner(((Button)actionEvent.getSource()).getScene().getWindow());
         primaryStage.show();
     }
 
     @FXML
-    public void DzienWybrany(Event e){
+    public void DzienWybrany(){
         setWybranyElement(WyborDnia.getSelectionModel().getSelectedIndex());
         System.out.println(getWybranyElement());
         if(getWybranyElement() == 7){
             setDzien("");
         }else {
-            setDzien(WyborDnia.getItems().get(getWybranyElement()).toString());
+            setDzien(WyborDnia.getItems().get(getWybranyElement()));
         }
         System.out.println("Wybrany dzień to " + getDzien());
     }
@@ -109,17 +107,12 @@ public class HelloController {
             DetaleList.getItems().add("Poziom: " + jsonObject.getString("poziom"));
             DetaleList.getItems().add("Zapisy: " + jsonObject.getString("zapisy"));
             JSONArray uwagi = jsonObject.getJSONArray("uwagi");
-            int liczbaUwag = uwagi.length();
-            String uwaga = null;
-            for (int i=0; i<liczbaUwag; i++){
-                if(i>0){
-                    uwaga = uwaga + ", " + uwagi.getString(i);
-                }else{
-                    uwaga = uwagi.getString(i);
-                }
-            }
-            uwaga = uwaga.substring(4);
-            DetaleList.getItems().add("Uwagi: " + uwaga);
+
+            ArrayList<String> uwagi_list = new ArrayList<>();
+            for(Object uwaga : uwagi)
+                uwagi_list.add(uwaga.toString());
+
+            DetaleList.getItems().add("Uwagi: " + String.join(", ", uwagi_list));
         }
     }
 
@@ -154,9 +147,16 @@ public class HelloController {
         URL url = new URL(adresZDniom);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         InputStream inputConn = connection.getInputStream();
-        Scanner sc = new Scanner(inputConn);
-        String text = sc.nextLine();
-        return text;
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputConn));
+
+        StringBuilder text = new StringBuilder();
+        String line;
+        while((line = bufferedReader.readLine()) != null)
+            text.append(line);
+
+        bufferedReader.close();
+
+        return text.toString();
     }
 
     public void PokazGrafik(String text){
@@ -177,7 +177,7 @@ public class HelloController {
     }
 
     @FXML
-    public void handleMouseClicked(MouseEvent arg0){
+    public void handleMouseClicked(){
         System.out.println("clicked!");
         DrukujDetali(getJson());
     }
