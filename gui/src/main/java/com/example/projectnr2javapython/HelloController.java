@@ -25,6 +25,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,6 +36,9 @@ public class HelloController {
 
     @FXML
     private ComboBox<String> WyborDnia;
+
+    @FXML
+    public ComboBox<String> wyborGodziny;
 
     @FXML
     private ListView<String> HarmonogramList;
@@ -73,6 +78,7 @@ public class HelloController {
 
     @FXML
     public void initialize() {
+        WyborDnia.getItems().add("Wszystkie dni");
         WyborDnia.getItems().add("Poniedziałek");
         WyborDnia.getItems().add("Wtorek");
         WyborDnia.getItems().add("Środa");
@@ -80,7 +86,10 @@ public class HelloController {
         WyborDnia.getItems().add("Piątek");
         WyborDnia.getItems().add("Sobota");
         WyborDnia.getItems().add("Niedziela");
-        WyborDnia.getItems().add("Wszystkie dni");
+
+        wyborGodziny.getItems().add("Dowolna");
+        for(int i = 0; i < 24; i++)
+            wyborGodziny.getItems().add("" + i);
 
         onWczytajButtonClick();
     }
@@ -108,7 +117,7 @@ public class HelloController {
     public void dzienWybrany() {
         setWybranyElement(WyborDnia.getSelectionModel().getSelectedIndex());
         System.out.println(getWybranyElement());
-        if(getWybranyElement() == 7)
+        if(getWybranyElement() == 0)
             setDzien("");
         else
             setDzien(WyborDnia.getItems().get(getWybranyElement()));
@@ -143,9 +152,18 @@ public class HelloController {
 
     public String getTekstStrony() throws IOException {
         String adres = "http://127.0.0.1:5000/";
-        String parametry = "dzien=" + URLEncoder.encode(getDzien(), StandardCharsets.UTF_8);
-        String adresZapytania = adres + "?" + parametry;
+        ArrayList<String> parametry = new ArrayList<>();
 
+        HashMap<String, String> parametryMap = new HashMap<>();
+        parametryMap.put("dzien", getDzien());
+
+        if(wyborGodziny.getSelectionModel().getSelectedIndex() > 0)
+            parametryMap.put("godziny", wyborGodziny.getValue());
+
+        for(Map.Entry<String, String> entry : parametryMap.entrySet())
+            parametry.add(entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+
+        String adresZapytania = adres + "?" + String.join("&", parametry);
         System.out.println(adresZapytania);
 
         URL url = new URL(adresZapytania);
@@ -173,7 +191,7 @@ public class HelloController {
                 HarmonogramList.getItems().add(jsonObject.getString("dzien") + "  " + jsonObject.getString("godziny") + "  " + jsonObject.getString("kurs"));
             }
         } else
-            HarmonogramList.getItems().add("W wybranym dniu nie ma zajęć.");
+            HarmonogramList.getItems().add("Nie znaleziono zajęć spełniających podane kryteria.");
     }
 
     @FXML

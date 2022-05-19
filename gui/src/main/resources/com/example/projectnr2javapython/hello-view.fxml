@@ -11,6 +11,7 @@
    </padding>
    <HBox spacing="5">
       <ComboBox fx:id="WyborDnia" onAction="#dzienWybrany" prefWidth="150.0" maxWidth="Infinity" promptText="Wybierz Dzień..." HBox.hgrow="ALWAYS" />
+      <ComboBox fx:id="wyborGodziny" prefWidth="150.0" promptText="Wybierz godzinę..." maxWidth="Infinity" HBox.hgrow="ALWAYS" />
       <Button onAction="#onWczytajButtonClick" text="Pokaż Zajęcia" />
       <Button onAction="#onHelpButtonClicked" text="Pomoc" />
    </HBox>
