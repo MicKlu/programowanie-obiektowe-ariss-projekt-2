@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="258.0" prefWidth="243.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projectnr2javapython.HelpSceneController">
+   <children>
+      <Button fx:id="ZamknijButton" layoutX="92.0" layoutY="218.0" mnemonicParsing="false" onAction="#onZamknijButtonClicked" text="Zamknij" />
+      <Label layoutX="10.0" layoutY="14.0" prefHeight="60.0" prefWidth="223.0" text="Aby wybrać zajęcia w jakim dniu mają być wyświetlone należy wybrać odpowiedni dzień w górnym lewym menu." textAlignment="JUSTIFY" wrapText="true" />
+      <Label layoutX="10.0" layoutY="74.0" prefHeight="48.0" prefWidth="223.0" text="Aby wyświetlić zajęcia należy kliknąć przycisk &quot;Pokaż Zajęcia&quot;." textAlignment="JUSTIFY" wrapText="true" />
+      <Label layoutX="11.0" layoutY="122.0" prefHeight="88.0" prefWidth="223.0" text="Aby zobaczyć detali konkretnych zajęć należy zaznaczyć/kliknąć na wybrane zajęcia w oknie &quot;Zajęcia&quot;. Dostępna informacja pojawi się w oknie &quot;Detali zajęć&quot; poniżej." wrapText="true" />
+   </children>
+</AnchorPane>
