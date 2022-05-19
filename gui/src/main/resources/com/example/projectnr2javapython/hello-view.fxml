@@ -10,9 +10,13 @@
       <Insets topRightBottomLeft="10.0" />
    </padding>
    <HBox spacing="5">
-      <ComboBox fx:id="WyborDnia" onAction="#DzienWybrany" prefWidth="150.0" maxWidth="Infinity" promptText="Wybierz Dzień..." HBox.hgrow="ALWAYS" />
+      <ComboBox fx:id="WyborDnia" onAction="#dzienWybrany" prefWidth="150.0" maxWidth="Infinity" promptText="Wybierz Dzień..." HBox.hgrow="ALWAYS" />
       <Button onAction="#onWczytajButtonClick" text="Pokaż Zajęcia" />
       <Button onAction="#onHelpButtonClicked" text="Pomoc" />
+   </HBox>
+   <HBox fx:id="pobieranieDanych" spacing="5" alignment="CENTER_LEFT">
+      <ProgressIndicator maxHeight="20" maxWidth="20" />
+      <Label text="Pobieranie danych..." />
    </HBox>
    <Label text="Zajęcia:"/>
    <ListView fx:id="HarmonogramList" onMouseClicked="#handleMouseClicked" prefHeight="200.0" prefWidth="200.0"

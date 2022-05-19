@@ -15,6 +15,8 @@ public class HelloApplication extends Application {
         stage.setTitle("Grafik Zajęć");
         stage.setScene(scene);
 
+        ((HelloController)fxmlLoader.getController()).setStage(stage);
+
         stage.setMinWidth(640);
         stage.setMinHeight(480);
         stage.sizeToScene();
