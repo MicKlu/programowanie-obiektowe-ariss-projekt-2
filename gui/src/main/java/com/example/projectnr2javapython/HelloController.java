@@ -1,190 +1,251 @@
 package com.example.projectnr2javapython;
 
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HelloController {
 
-    @FXML
-    private ComboBox WyborDnia;
+    private Stage stage;
 
     @FXML
-    private ListView HarmonogramList;
+    private ComboBox<String> wyborDnia;
 
     @FXML
-    private ListView DetaleList;
+    public ComboBox<String> wyborGodziny;
 
     @FXML
-    private Button PomocButton;
+    private ListView<String> harmonogramList;
+
+    @FXML
+    private ListView<String> detaleList;
+
+    @FXML
+    private HBox pobieranieDanych;
 
     private int wybranyElement;
-    private String dzien;
+    private String dzien = "";
     private static JSONObject json = null;
 
-    public void setJson(String text){
+    public void setJson(String text) {
         json = new JSONObject(text);
     }
-    public JSONObject getJson(){
+
+    public JSONObject getJson() {
         return json;
     }
-    public void setWybranyElement(int we){
+
+    public void setWybranyElement(int we) {
         this.wybranyElement = we;
     }
-    public int getWybranyElement(){
+
+    public int getWybranyElement() {
         return wybranyElement;
     }
+
     public void setDzien(String dzien) {
         this.dzien = dzien;
     }
-    public String getDzien(){
+
+    public String getDzien() {
         return dzien;
     }
 
-    @FXML
-    public void initialize(){
-        WyborDnia.getItems().add("Poniedziałek");
-        WyborDnia.getItems().add("Wtorek");
-        WyborDnia.getItems().add("Środa");
-        WyborDnia.getItems().add("Czwartek");
-        WyborDnia.getItems().add("Piątek");
-        WyborDnia.getItems().add("Sobota");
-        WyborDnia.getItems().add("Niedziela");
-        WyborDnia.getItems().add("Wszystkie dni");
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     @FXML
-    private void onHelpButtonClicked() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("HelpScene.fxml"));
+    public void initialize() {
+        wyborDnia.getItems().add("Wszystkie dni");
+        wyborDnia.getItems().add("Poniedziałek");
+        wyborDnia.getItems().add("Wtorek");
+        wyborDnia.getItems().add("Środa");
+        wyborDnia.getItems().add("Czwartek");
+        wyborDnia.getItems().add("Piątek");
+        wyborDnia.getItems().add("Sobota");
+        wyborDnia.getItems().add("Niedziela");
 
-        Scene scene = new Scene(root);
+        wyborGodziny.getItems().add("Dowolna");
+        for(int i = 0; i < 24; i++)
+            wyborGodziny.getItems().add("" + i);
+
+        onWczytajButtonClick();
+    }
+
+    @FXML
+    private void onHelpButtonClicked(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("HelpScene.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+
         Stage primaryStage = new Stage();
         primaryStage.setTitle("Pomoc");
         primaryStage.setScene(scene);
-
         primaryStage.initModality(Modality.WINDOW_MODAL);
+        primaryStage.initOwner(((Button)actionEvent.getSource()).getScene().getWindow());
+
+        primaryStage.setMinWidth(250);
+        primaryStage.setMinHeight(300);
+
+        primaryStage.sizeToScene();
+
         primaryStage.show();
     }
 
     @FXML
-    public void DzienWybrany(Event e){
-        setWybranyElement(WyborDnia.getSelectionModel().getSelectedIndex());
+    public void dzienWybrany() {
+        setWybranyElement(wyborDnia.getSelectionModel().getSelectedIndex());
         System.out.println(getWybranyElement());
-        if(getWybranyElement() == 7){
+        if(getWybranyElement() == 0)
             setDzien("");
-        }else {
-            setDzien(WyborDnia.getItems().get(getWybranyElement()).toString());
-        }
+        else
+            setDzien(wyborDnia.getItems().get(getWybranyElement()));
         System.out.println("Wybrany dzień to " + getDzien());
     }
     
-    public void DrukujDetali(JSONObject json1){
-        if(json1 == null){
-            System.out.println("JSON pusty");
+    public void drukujDetali(JSONObject json1) {
+        detaleList.getItems().clear();
+        int a = harmonogramList.getSelectionModel().getSelectedIndex();
+
+        if(a == -1)
             return;
-        }
-        DetaleList.getItems().clear();
-        int a = HarmonogramList.getSelectionModel().getSelectedIndex();
+
         JSONArray jsonGrafik = json1.getJSONArray("grafik");
-        if(!jsonGrafik.isEmpty()){
-            JSONObject jsonObject = jsonGrafik.getJSONObject(a);
-            System.out.println(jsonObject.toString());
-            DetaleList.getItems().add("Instruktor: " + jsonObject.getString("instruktor"));
-            DetaleList.getItems().add("Poziom: " + jsonObject.getString("poziom"));
-            DetaleList.getItems().add("Zapisy: " + jsonObject.getString("zapisy"));
-            JSONArray uwagi = jsonObject.getJSONArray("uwagi");
-            int liczbaUwag = uwagi.length();
-            String uwaga = null;
-            for (int i=0; i<liczbaUwag; i++){
-                if(i>0){
-                    uwaga = uwaga + ", " + uwagi.getString(i);
-                }else{
-                    uwaga = uwagi.getString(i);
-                }
-            }
-            uwaga = uwaga.substring(4);
-            DetaleList.getItems().add("Uwagi: " + uwaga);
-        }
+
+        if(jsonGrafik.isEmpty())
+            return;
+
+        JSONObject jsonObject = jsonGrafik.getJSONObject(a);
+        System.out.println(jsonObject.toString());
+        detaleList.getItems().add("Instruktor: " + jsonObject.getString("instruktor"));
+        detaleList.getItems().add("Poziom: " + jsonObject.getString("poziom"));
+        detaleList.getItems().add("Zapisy: " + jsonObject.getString("zapisy"));
+        JSONArray uwagi = jsonObject.getJSONArray("uwagi");
+
+        ArrayList<String> uwagi_list = new ArrayList<>();
+        for(Object uwaga : uwagi)
+            uwagi_list.add(uwaga.toString());
+
+        detaleList.getItems().add("Uwagi: " + String.join(", ", uwagi_list));
     }
 
-    public String getTekstStrony() throws IOException{
+    public String getTekstStrony() throws IOException {
         String adres = "http://127.0.0.1:5000/";
-        String adresZDniom;
-        String dzienDlaURL;
-        boolean wszystkiedni = false;
-        if(getDzien() == null){
-            adresZDniom = adres;
-        }else{
-            switch (getDzien()){
-                case "Poniedziałek" -> dzienDlaURL = "Poniedzia%C5%82ek";
-                case "Wtorek" -> dzienDlaURL = "Wtorek";
-                case "Środa" -> dzienDlaURL = "%C5%9Aroda";
-                case "Czwartek" -> dzienDlaURL = "Czwartek";
-                case "Piątek" -> dzienDlaURL = "Pi%C4%85tek";
-                case "Sobota" -> dzienDlaURL = "Sobota";
-                case "Niedziela" -> dzienDlaURL = "Niedziela";
-                default -> {
-                    dzienDlaURL = "";
-                    wszystkiedni = true;
-                }
-            }
-            if (wszystkiedni){
-                adresZDniom = adres;
-            }else{
-                adresZDniom = adres + "?dzien=" + dzienDlaURL;
-            }
-        }
-        System.out.println(adresZDniom);
-        URL url = new URL(adresZDniom);
+        ArrayList<String> parametry = new ArrayList<>();
+
+        HashMap<String, String> parametryMap = new HashMap<>();
+        parametryMap.put("dzien", getDzien());
+
+        if(wyborGodziny.getSelectionModel().getSelectedIndex() > 0)
+            parametryMap.put("godziny", wyborGodziny.getValue());
+
+        for(Map.Entry<String, String> entry : parametryMap.entrySet())
+            parametry.add(entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+
+        String adresZapytania = adres + "?" + String.join("&", parametry);
+        System.out.println(adresZapytania);
+
+        URL url = new URL(adresZapytania);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         InputStream inputConn = connection.getInputStream();
-        Scanner sc = new Scanner(inputConn);
-        String text = sc.nextLine();
-        return text;
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputConn));
+
+        StringBuilder text = new StringBuilder();
+        String line;
+        while((line = bufferedReader.readLine()) != null)
+            text.append(line);
+
+        bufferedReader.close();
+
+        return text.toString();
     }
 
-    public void PokazGrafik(String text){
-        setJson(text);
+    public void pokazGrafik() {
         JSONArray jsonGrafik = getJson().getJSONArray("grafik");
         int liczbaZajec = jsonGrafik.length();
-        System.out.println("liczba zajec = "+ liczbaZajec);
-        HarmonogramList.getItems().clear();
-        DetaleList.getItems().clear();
-        if(!(liczbaZajec == 0)){
-            for(int a = 0; a< liczbaZajec; a++){
+        System.out.println("liczba zajec = " + liczbaZajec);
+        if(liczbaZajec != 0) {
+            for (int a = 0; a < liczbaZajec; a++) {
                 JSONObject jsonObject = jsonGrafik.getJSONObject(a);
-                HarmonogramList.getItems().add(jsonObject.getString("dzien") + "  " + jsonObject.getString("godziny") + "  " + jsonObject.getString("kurs"));
+                harmonogramList.getItems().add(jsonObject.getString("dzien") + "  " + jsonObject.getString("godziny") + "  " + jsonObject.getString("kurs"));
             }
-        }else{
-            HarmonogramList.getItems().add("W wybranum dniu nie ma zajęć.");
-        }
+        } else
+            harmonogramList.getItems().add("Nie znaleziono zajęć spełniających podane kryteria.");
     }
 
     @FXML
-    public void handleMouseClicked(MouseEvent arg0){
-        System.out.println("clicked!");
-        DrukujDetali(getJson());
+    public void handleMouseClicked() {
+        drukujDetali(getJson());
     }
 
     @FXML
-    protected void onWczytajButtonClick() throws IOException{
-        String text = getTekstStrony();
-        PokazGrafik(text);
+    protected void onWczytajButtonClick() {
+        harmonogramList.getItems().clear();
+        detaleList.getItems().clear();
+        pobieranieDanych.setVisible(true);
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor(r -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        });
+        executorService.submit(() -> {
+            try {
+                String text = getTekstStrony();
+
+                Platform.runLater(() -> {
+                    setJson(text);
+
+                    JSONObject json = getJson();
+                    String status = json.getString("status");
+                    if(status.equals("sukces"))
+                        pokazGrafik();
+                    else
+                        pokazBlad(json.getString("info"));
+                });
+            } catch(ConnectException e) {
+                Platform.runLater(() -> pokazBlad("Nie można nawiązać połączenia z robotem."));
+            } catch (IOException e) {
+                Platform.runLater(() -> pokazBlad(e.getMessage()));
+            } finally {
+                Platform.runLater(() -> pobieranieDanych.setVisible(false));
+            }
+        });
+    }
+
+    private void pokazBlad(String text) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Błąd");
+        alert.setTitle("Wystąpił błąd");
+        alert.setContentText(text);
+        alert.initOwner(stage);
+        alert.showAndWait();
     }
 }

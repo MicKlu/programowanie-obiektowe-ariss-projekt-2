@@ -6,10 +6,10 @@ import javafx.stage.Stage;
 
 public class HelpSceneController {
     @FXML
-    private Button ZamknijButton;
+    private Button zamknijButton;
     @FXML
     private void onZamknijButtonClicked(){
-        Stage stage = (Stage) ZamknijButton.getScene().getWindow();
+        Stage stage = (Stage) zamknijButton.getScene().getWindow();
         stage.close();
     }
 }
