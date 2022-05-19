@@ -73,6 +73,15 @@ def match_filter(lesson: 'Lesson', day: str, time: str, course: str, level: str,
     if time:
         time = re.sub(" ", "", time)
         time = re.escape(time)
+
+        try:
+            time = int(time)
+            if time < 10:
+                time = f"0{time}"
+            time = str(time)
+        except:
+            pass
+
         if not (re.search(f"{time}:", lesson.time) or re.match(time, re.sub(" ", "", lesson.time))):
             return False
 
