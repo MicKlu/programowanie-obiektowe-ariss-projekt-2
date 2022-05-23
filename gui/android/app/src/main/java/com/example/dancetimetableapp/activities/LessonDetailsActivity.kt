@@ -1,4 +1,4 @@
-package com.example.dancetimetableapp
+package com.example.dancetimetableapp.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
