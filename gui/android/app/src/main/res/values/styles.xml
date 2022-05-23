@@ -38,4 +38,11 @@
         <item name="android:textSize">32sp</item>
         <item name="android:textColor">@color/design_default_color_secondary_variant</item>
     </style>
+
+    <style name="FilterHeader" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
 </resources>
