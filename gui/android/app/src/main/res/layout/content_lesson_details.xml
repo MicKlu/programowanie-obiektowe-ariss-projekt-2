@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <TextView
+        style="@style/Header"
+        android:text="PROJECT CHOREO: STREET DANCE"
+        android:textAlignment="center"
+        android:textSize="36sp"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Poniedziałek"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/LessonDetailsTime"
+                android:text="16:50"
+                android:textAlignment="textEnd"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                style="@style/LessonDetailsTime"
+                android:layout_width="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="0"
+                android:text="-"
+                tools:ignore="HardcodedText,InefficientWeight" />
+
+            <TextView
+                style="@style/LessonDetailsTime"
+                android:text="17:50"
+                android:textAlignment="textStart"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        style="@style/DetailsHeader"
+        android:text="@string/level" />
+
+    <TextView
+        style="@style/DetailsValue"
+        android:text="od podstaw"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/DetailsHeader"
+        android:text="@string/instructor" />
+
+    <TextView
+        style="@style/DetailsValue"
+        android:text="Bartek"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/DetailsHeader"
+        android:text="@string/notes" />
+
+    <TextView
+        style="@style/DetailsValue"
+        android:text="&#8226; kurs trwa\n&#8226; GRUPA ZAMKNIĘTA\n&#8226; ✅ MULTISPORT"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        style="@style/DetailsHeader"
+        android:text="@string/enrollment" />
+
+    <TextView
+        style="@style/DetailsValue"
+        android:text="BRAK MIEJSC"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>

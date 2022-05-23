@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_margin="8dp">
+
+        <TextView
+            style="@style/Header"
+            android:layout_width="wrap_content"
+            android:text="PROJECT CHOREO: STREET DANCE"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:textSize="24sp"
+            tools:ignore="HardcodedText"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:layout_marginTop="4dp">
+            <LinearLayout style="@style/DayTimeLayout"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_marginStart="0dp">
+                <TextView
+                    style="@style/DayTimeLayoutTextView"
+                    android:textSize="12sp"
+                    android:text="@string/day" />
+                <TextView
+                    android:id="@+id/lesson_day"
+                    style="@style/DayTimeLayoutTextViewValue"
+                    android:text="Poniedziałek"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/DayTimeLayout">
+                <TextView
+                    style="@style/DayTimeLayoutTextView"
+                    android:textSize="12sp"
+                    android:text="@string/time_from" />
+                <TextView
+                    android:id="@+id/lesson_time_start"
+                    style="@style/DayTimeLayoutTextViewValue"
+                    android:text="16:50"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/DayTimeLayout">
+                <TextView
+                    style="@style/DayTimeLayoutTextView"
+                    android:textSize="12sp"
+                    android:text="@string/time_to" />
+                <TextView
+                    android:id="@+id/lesson_time_end"
+                    style="@style/DayTimeLayoutTextViewValue"
+                    android:text="17:50"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+
