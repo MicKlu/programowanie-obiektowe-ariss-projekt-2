@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun refreshTimetable() {
         val executor = Executors.newSingleThreadExecutor()
-        executor.submit() {
+        executor.submit {
             // TODO: Fetch JSON here
 
             val exampleLesson1 = Lesson(JSONObject("{}"))

@@ -14,7 +14,7 @@
             android:id="@+id/timetable_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="4dp"
+            android:scrollbars="vertical"
             tools:listitem="@layout/lesson_list_item"
             tools:itemCount="10" />
 
