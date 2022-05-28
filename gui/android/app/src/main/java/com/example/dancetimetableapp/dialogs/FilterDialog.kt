@@ -13,6 +13,7 @@ class FilterDialog : DialogFragment() {
 
     var day: String = ""
     var time: String = ""
+    var course: String = ""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
@@ -25,6 +26,7 @@ class FilterDialog : DialogFragment() {
 
             var dayPos = resources.getStringArray(R.array.days).asList().indexOf(day)
             var timePos = resources.getStringArray(R.array.hours).asList().indexOf(time)
+            var coursePos = resources.getStringArray(R.array.courses).asList().indexOf(course)
 
             if(dayPos == -1)
                 dayPos = 0
@@ -32,8 +34,12 @@ class FilterDialog : DialogFragment() {
             if(timePos == -1)
                 timePos = 0
 
+            if(coursePos == -1)
+                coursePos = 0
+
             binding.day.setSelection(dayPos)
             binding.hour.setSelection(timePos)
+            binding.course.setSelection(coursePos)
 
             builder.setPositiveButton(R.string.save) { dialog, _ ->
                 day = binding.day.selectedItem.toString()
@@ -41,6 +47,7 @@ class FilterDialog : DialogFragment() {
                     day = ""
 
                 time = binding.hour.selectedItem.toString()
+                course = binding.course.selectedItem.toString()
                 dialog.dismiss()
             }
             builder.setNegativeButton(R.string.cancel) { dialog, _ ->

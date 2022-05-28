@@ -21,4 +21,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:entries="@array/hours"/>
+    <TextView
+        style="@style/FilterHeader"
+        android:text="@string/course"/>
+    <Spinner
+        android:id="@+id/course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/courses"/>
 </LinearLayout>
