@@ -4,6 +4,8 @@ import os
 import requests
 from bs4 import BeautifulSoup, Tag
 import re
+import csv
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -32,36 +34,71 @@ def index():
 
 def get_schedule(day: str, time: str, course: str, level: str, notes: str, instructor: str, enrollment: str) -> dict:
 
+    schedule = {
+        "status": "sukces",
+        "grafik": []
+    }
+
+    data = get_from_cache(day, time, course, level, notes, instructor, enrollment)
+
+    if data:
+        schedule["grafik"] = data
+        return schedule
+
     try:
         response = requests.get("https://www.dancefusion.com.pl/grafik")
 
         if response.status_code != 200:
             return get_error(status_code=response.status_code, info="Błąd odpowiedzi serwera")
 
-    
         bs = BeautifulSoup(response.content, 'html.parser')
         table: Tag = bs.find("table", id="table_1")
         trs: 'list[Tag]' = table.tbody.find_all("tr")
-    
-        schedule = {
-            "status": "sukces",
-            "grafik": []
-        }
 
-        for tr in trs:
-            tds: 'list[Tag]' = tr.find_all("td")
-            lesson = Lesson(tds)
+        with open("cache.csv", "w") as cache:
+            cache_writer = csv.writer(cache)
+            for tr in trs:
+                tds: 'list[Tag]' = tr.find_all("td")
+                lesson = Lesson(tds)
+                cache_writer.writerow(lesson.as_list())
 
-            if not match_filter(lesson, day, time, course, level, notes, instructor, enrollment):
-                continue
+                if not match_filter(lesson, day, time, course, level, notes, instructor, enrollment):
+                    continue
 
-            schedule["grafik"].append(lesson.as_dict())
-    
-        return schedule
+                schedule["grafik"].append(lesson.as_dict())
     except requests.exceptions.ConnectionError:
         return get_error(info="Nie można nawiązać połączenia z serwerem")
     except:
         return get_error(info="Nie można sparsować strony")
+
+    return schedule
+
+def get_from_cache(day: str, time: str, course: str, level: str, notes: str, instructor: str, enrollment: str) -> list:
+    if not os.path.exists("cache.csv"):
+        return None
+
+    cache_mtime = os.path.getmtime("cache.csv")
+    now = datetime.now().timestamp()
+    delta = timedelta(seconds=(now - cache_mtime))
+    hours = delta.seconds // 3600
+
+    if hours >= 1:
+        return None
+
+    try:
+        data = []
+        with open("cache.csv", "r") as cache:
+            cache_reader = csv.reader(cache)
+            for record in cache_reader:
+                lesson = Lesson.from_list(record)
+
+                if not match_filter(lesson, day, time, course, level, notes, instructor, enrollment):
+                    continue
+
+                data.append(lesson.as_dict())
+        return data
+    except:
+        return None
 
 def match_filter(lesson: 'Lesson', day: str, time: str, course: str, level: str, notes: str, instructor: str, enrollment: str) -> bool:
 
@@ -127,10 +164,14 @@ def get_error(status_code: int=None, info: str=None) -> dict:
 
 class Lesson:
 
-    def __init__(self, tds: 'list[Tag]'):
+    def __init__(self, tds: 'list[Tag]'=None):
+
+        if not tds:
+            return
+
         self.day = tds[1].text
         self.time = tds[2].text
-        self.course = tds[3].text
+        self.course = tds[3].text.title()
         self.level = tds[4].text
         self.notes = [ s for s in tds[5].strings ]
         self.instructor = tds[7].text
@@ -138,6 +179,19 @@ class Lesson:
 
         if self.enrollment == "ZAPISZ SIĘ":
             self.enrollment = "WOLNE MIEJSCA"
+
+    @staticmethod
+    def from_list(_list: list) -> 'Lesson':
+        lesson = Lesson()
+        lesson.day = _list[0]
+        lesson.time = _list[1]
+        lesson.course = _list[2]
+        lesson.level = _list[3]
+        lesson.notes = _list[4][2:-2].split("', '")
+        lesson.instructor = _list[5]
+        lesson.enrollment = _list[6]
+
+        return lesson
 
     def as_dict(self) -> dict:
         return {
@@ -149,3 +203,14 @@ class Lesson:
             "instruktor": self.instructor,
             "zapisy": self.enrollment
         }
+
+    def as_list(self) -> list:
+        return [
+            self.day,
+            self.time,
+            self.course,
+            self.level,
+            self.notes,
+            self.instructor,
+            self.enrollment
+        ]
