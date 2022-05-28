@@ -32,7 +32,29 @@ def index():
     
     return get_schedule(day, time, course, level, notes, instructor, enrollment)
 
-def get_schedule(day: str, time: str, course: str, level: str, notes: str, instructor: str, enrollment: str) -> dict:
+@app.route("/kursy")
+def courses():
+
+    schedule = get_schedule()
+
+    if schedule["status"] != "sukces":
+        return schedule
+
+    courses = {
+        "status": "sukces",
+        "kursy": []
+    }
+
+    for lesson in schedule["grafik"]:
+        if lesson["kurs"] in courses["kursy"]:
+            continue
+        courses["kursy"].append(lesson["kurs"])
+
+    courses["kursy"].sort()
+
+    return courses
+
+def get_schedule(day: str=None, time: str=None, course: str=None, level: str=None, notes: str=None, instructor: str=None, enrollment: str=None) -> dict:
 
     schedule = {
         "status": "sukces",
