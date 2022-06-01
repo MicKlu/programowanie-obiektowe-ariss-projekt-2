@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dancetimetableapp.model.Lesson
 import com.example.dancetimetableapp.databinding.LessonListItemBinding
 
-class LessonsListAdapter(var data: ArrayList<Lesson>): RecyclerView.Adapter<LessonsListAdapter.ViewHolder>() {
+class LessonsListAdapter(): RecyclerView.Adapter<LessonsListAdapter.ViewHolder>() {
 
+    var data: List<Lesson> = ArrayList()
     var clickListener: OnClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -35,22 +35,26 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        val lessonsListAdapter = LessonsListAdapter(model.lessons)
+        val lessonsListAdapter = LessonsListAdapter()
         lessonsListAdapter.clickListener = LessonsListAdapter.OnClickListener {
             val intent = Intent(this, LessonDetailsActivity::class.java)
             intent.putExtra("lesson", it)
             startActivity(intent)
         }
-
         binding.content.timetableList.adapter = lessonsListAdapter
         binding.content.timetableList.layoutManager = LinearLayoutManager(this)
         binding.content.timetableList.itemAnimator = null
 
-        binding.content.swipeRefresh.setOnRefreshListener {
-            refreshTimetable()
+        model.getLessons().observe(this) {
+            lessonsListAdapter.data = it
+            lessonsListAdapter.notifyDataSetChanged()
+
+            binding.content.swipeRefresh.isRefreshing = false
         }
 
-        refreshTimetable()
+        binding.content.swipeRefresh.setOnRefreshListener {
+            model.loadLessons()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,7 +64,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.action_refresh) {
-            refreshTimetable()
+            binding.content.swipeRefresh.isRefreshing = true
+            model.loadLessons()
             return true
         }
 
@@ -70,25 +75,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun refreshTimetable() = lifecycleScope.launch {
-        binding.content.swipeRefresh.isRefreshing = true
-
-        // TODO: Fetch JSON here
-
-        val exampleLesson1 = Lesson(JSONObject("{}"))
-        val exampleLesson2 = Lesson(JSONObject("{}"))
-        val exampleLesson3 = Lesson(JSONObject("{}"))
-
-        exampleLesson2.course = "FORMACJA DANCEHALL"
-        exampleLesson3.course = "TANIEC UŻYTKOWY"
-
-        model.lessons.clear()
-        model.lessons.addAll(arrayListOf(exampleLesson1, exampleLesson2, exampleLesson3))
-        binding.content.timetableList.adapter?.notifyDataSetChanged()
-
-        binding.content.swipeRefresh.isRefreshing = false
     }
 }

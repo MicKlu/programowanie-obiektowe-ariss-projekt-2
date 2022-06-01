@@ -3,6 +3,8 @@ package com.example.dancetimetableapp.datasources
 import android.content.Context
 import android.util.Log
 import com.example.dancetimetableapp.R
+import com.example.dancetimetableapp.model.FilterParams
+import com.example.dancetimetableapp.model.Lesson
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
@@ -51,5 +53,30 @@ class RemoteDataSource : DataSource {
         }
 
         return coursesList
+    }
+
+    fun getLessons(context: Context, filterParams: FilterParams): List<Lesson>? {
+        val endpoint = context.resources.getString(R.string.endpoint, "")
+
+        val lessonsList = ArrayList<Lesson>()
+
+        try {
+            val result = doRequest(endpoint)
+            val json = JSONObject(result)
+            val lessons = json.getJSONArray("grafik")
+            repeat(lessons.length()) { i ->
+                lessonsList.add(Lesson(lessons.getJSONObject(i)))
+            }
+
+//            val cachedDataSource = CachedDataSource("courses")
+//            cachedDataSource.cacheListData(
+//                context, coursesList.subList(1, coursesList.size - 1))
+
+        } catch (e: IOException) {
+            Log.w("dta", e.stackTraceToString())
+            return null
+        }
+
+        return lessonsList
     }
 }

@@ -9,7 +9,7 @@ class Lesson: Serializable {
     var time: String
     var course: String
     var level: String
-    var notes: ArrayList<String>
+    var notes = ArrayList<String>()
     var instructor: String
     var enrollment: String
 
@@ -20,13 +20,22 @@ class Lesson: Serializable {
         get() = time.split(" - ")[1]
 
     constructor(json: JSONObject) {
-        day = "Poniedziałek"
-        time = "16:50 - 17:50"
-        course = "SALSA SOLO"
-        level = "P2"
-        notes = arrayListOf("kurs trwa", "można dołączyć", "✅ MULTISPORT")
-        instructor = "Agnieszka"
-        enrollment = "WOLNE MIEJSCA"
+        day = json.getString("dzien")
+        time = json.getString("godziny")
+        course = json.getString("kurs")
+        level = json.getString("poziom")
+
+        val notesJSONArray = json.getJSONArray("uwagi")
+        repeat(notesJSONArray.length()) { i ->
+            notes.add(notesJSONArray.getString(i))
+        }
+
+        instructor = json.getString("instruktor")
+        enrollment = json.getString("zapisy")
     }
+
+//    constructor(csv: String) {
+//
+//    }
 
 }
