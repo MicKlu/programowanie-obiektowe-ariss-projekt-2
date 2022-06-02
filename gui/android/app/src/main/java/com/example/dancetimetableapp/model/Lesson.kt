@@ -2,6 +2,7 @@ package com.example.dancetimetableapp.model
 
 import org.json.JSONObject
 import java.io.Serializable
+import kotlin.math.pow
 
 class Lesson: Serializable {
 
@@ -60,5 +61,9 @@ class Lesson: Serializable {
         return list.joinToString(",") {
             "\"${it.replace("\"", "\"\"")}\""
         }
+    }
+
+    fun hash(): Int {
+        return toString().hashCode()
     }
 }

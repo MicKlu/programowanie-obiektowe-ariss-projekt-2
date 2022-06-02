@@ -20,6 +20,12 @@
     <string name="lessons_not_found">Nie znaleziono zajęć</string>
     <string name="lessons_not_found_caption">Spróbuj zmienić ustawienia filtru lub odświeżyć</string>
     <string name="dancefusion_logo">DanceFusion Logo</string>
+    <string name="action_remind">Ustaw przypomnienie</string>
+
+    <string name="notification_channel_remind">Przypomnienia</string>
+    <string name="notification_channel_remind_desc">Przypomnienia o zajęciach</string>
+    <string name="lesson_starts_soon">Zajęcia zaczynają się za 15 min</string>
+    <string name="lesson_starts_soon_desc">%1$s - od %2$s do %3$s</string>
 
     <string-array name="days">
         <item>Wszystkie dni</item>
