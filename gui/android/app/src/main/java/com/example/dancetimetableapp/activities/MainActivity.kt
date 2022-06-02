@@ -47,14 +47,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.content.timetableList.adapter = lessonsListAdapter
         binding.content.timetableList.layoutManager = LinearLayoutManager(this)
-        binding.content.timetableList.itemAnimator = null
 
         model.getLessons().observe(this) {
-            lessonsListAdapter.data = it
-            lessonsListAdapter.notifyDataSetChanged()
-
+            lessonsListAdapter.submitList(it)
             binding.content.emptyState.visibility = if(it.isNotEmpty()) View.GONE else View.VISIBLE
-
             binding.content.swipeRefresh.isRefreshing = false
         }
 
