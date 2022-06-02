@@ -17,6 +17,9 @@
     <string name="time">Godzina</string>
     <string name="course">Kurs</string>
     <string name="any">Dowolny</string>
+    <string name="lessons_not_found">Nie znaleziono zajęć</string>
+    <string name="lessons_not_found_caption">Spróbuj zmienić ustawienia filtru lub odświeżyć</string>
+    <string name="dancefusion_logo">DanceFusion Logo</string>
 
     <string-array name="days">
         <item>Wszystkie dni</item>
@@ -55,7 +58,6 @@
         <item>22</item>
         <item>23</item>
     </string-array>
-
     <string-array name="courses">
         <item>Dowolny</item>
     </string-array>

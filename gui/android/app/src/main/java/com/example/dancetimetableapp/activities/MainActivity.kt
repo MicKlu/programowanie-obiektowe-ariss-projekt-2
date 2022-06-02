@@ -1,11 +1,14 @@
 package com.example.dancetimetableapp.activities
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +18,7 @@ import com.example.dancetimetableapp.R
 import com.example.dancetimetableapp.adapters.LessonsListAdapter
 import com.example.dancetimetableapp.databinding.ActivityMainBinding
 import com.example.dancetimetableapp.dialogs.FilterDialog
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -48,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         model.getLessons().observe(this) {
             lessonsListAdapter.data = it
             lessonsListAdapter.notifyDataSetChanged()
+
+            binding.content.emptyState.visibility = if(it.isNotEmpty()) View.GONE else View.VISIBLE
 
             binding.content.swipeRefresh.isRefreshing = false
         }

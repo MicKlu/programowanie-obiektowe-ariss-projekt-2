@@ -40,18 +40,21 @@ object Repository {
     }
 
     fun loadLessons(context: Context, list: MutableLiveData<List<Lesson>>, filterParams: FilterParams) {
-//        val cachedDataSource = CachedDataSource("courses")
-//        cachedDataSource.getCourses(context)?.let {
-//            coursesLiveData.postValue(it)
-//        }
+        val cachedDataSource = CachedDataSource("lessons")
+        cachedDataSource.getLessons(context, filterParams)?.let {
+            list.postValue(it)
+        }
 
-//        if(!cachedDataSource.isUpToDate(context)) {
-//            Log.d("dta", "Need fetch")
+        if(!cachedDataSource.isUpToDate(context)) {
+            Log.d("dta", "Lessons need fetch")
             scope.launch {
                 remoteDataSource.getLessons(context, filterParams)?.let {
                     list.postValue(it)
+                } ?: run {
+                    if(!cachedDataSource.exists(context))
+                        list.postValue(ArrayList())
                 }
             }
-//        }
+        }
     }
 }

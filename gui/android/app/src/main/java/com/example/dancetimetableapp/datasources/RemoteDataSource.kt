@@ -14,8 +14,14 @@ import java.net.URL
 
 class RemoteDataSource : DataSource {
 
-    private fun doRequest(spec: String): String {
-        val url = URL(spec)
+    private fun doRequest(spec: String, params: Map<String, String>? = null): String {
+
+        val paramsList = ArrayList<String>()
+        params?.forEach {
+            paramsList.add("${it.key}=${it.value}")
+        }
+
+        val url = URL(spec + "?" + paramsList.joinToString("&"))
         val conn = url.openConnection() as HttpURLConnection
         val reader = BufferedReader(InputStreamReader(conn.inputStream))
         val result = StringBuilder()
@@ -48,35 +54,30 @@ class RemoteDataSource : DataSource {
                 context, coursesList.subList(1, coursesList.size - 1))
 
         } catch (e: IOException) {
-            Log.w("dta", e.stackTraceToString())
             return null
         }
 
         return coursesList
     }
 
-    fun getLessons(context: Context, filterParams: FilterParams): List<Lesson>? {
+    override fun getLessons(context: Context, filterParams: FilterParams): List<Lesson>? {
         val endpoint = context.resources.getString(R.string.endpoint, "")
 
-        val lessonsList = ArrayList<Lesson>()
-
-        try {
+        return try {
             val result = doRequest(endpoint)
             val json = JSONObject(result)
             val lessons = json.getJSONArray("grafik")
+
+            val lessonsList = ArrayList<Lesson>()
             repeat(lessons.length()) { i ->
                 lessonsList.add(Lesson(lessons.getJSONObject(i)))
             }
 
-//            val cachedDataSource = CachedDataSource("courses")
-//            cachedDataSource.cacheListData(
-//                context, coursesList.subList(1, coursesList.size - 1))
-
+            val cachedDataSource = CachedDataSource("lessons")
+            cachedDataSource.cacheListData(context, lessonsList)
+            cachedDataSource.getLessons(context, filterParams)
         } catch (e: IOException) {
-            Log.w("dta", e.stackTraceToString())
-            return null
+            null
         }
-
-        return lessonsList
     }
 }

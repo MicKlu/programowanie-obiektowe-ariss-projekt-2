@@ -34,8 +34,31 @@ class Lesson: Serializable {
         enrollment = json.getString("zapisy")
     }
 
-//    constructor(csv: String) {
-//
-//    }
+    constructor(csv: String) {
+        val list = csv.substring(1, csv.length - 1).split("\",\"")
+        day = list[0]
+        time = list[1]
+        course = list[2]
+        level = list[3]
+        notes.addAll(list[4].substring(1, list[4].length - 1).split(", ").map {
+            it.substring(1, it.length - 1)
+        })
+        instructor = list[5]
+        enrollment = list[6]
+    }
 
+    override fun toString(): String {
+        val list = arrayListOf(
+            day,
+            time,
+            course,
+            level,
+            notes.map { "'${it}'" }.toString(),
+            instructor,
+            enrollment
+        )
+        return list.joinToString(",") {
+            "\"${it.replace("\"", "\"\"")}\""
+        }
+    }
 }
