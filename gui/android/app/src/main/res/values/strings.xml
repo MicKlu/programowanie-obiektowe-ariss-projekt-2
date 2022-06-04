@@ -16,6 +16,7 @@
     <string name="filter">Filtruj</string>
     <string name="time">Godzina</string>
     <string name="course">Kurs</string>
+    <string name="any">Dowolny</string>
 
     <string-array name="days">
         <item>Wszystkie dni</item>
@@ -57,29 +58,5 @@
 
     <string-array name="courses">
         <item>Dowolny</item>
-        <item>Bachata Solo</item>
-        <item>Bachata Styling</item>
-        <item>Bachata W Parach</item>
-        <item>Bachata W Parach Single</item>
-        <item>Dancehall</item>
-        <item>Dancehall/Twerk</item>
-        <item>Formacja Dancehall</item>
-        <item>Hip Hop</item>
-        <item>Izolacje/Body Movement</item>
-        <item>Joga</item>
-        <item>Joga Kundalini</item>
-        <item>Latino Solo</item>
-        <item>Pierwszy Taniec</item>
-        <item>Project Choreo: Bachata</item>
-        <item>Project Choreo: Street Dance</item>
-        <item>Salsa Solo</item>
-        <item>Salsa W Parach</item>
-        <item>Sexy Dance</item>
-        <item>Taniec Brzucha</item>
-        <item>Taniec Jazzowy</item>
-        <item>Taniec Użytkowy</item>
-        <item>Twerk</item>
-        <item>West Coast Swing</item>
-        <item>West Coast Swing Technika</item>
     </string-array>
 </resources>

@@ -3,7 +3,7 @@ package com.example.dancetimetableapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.dancetimetableapp.Lesson
+import com.example.dancetimetableapp.model.Lesson
 import com.example.dancetimetableapp.databinding.LessonListItemBinding
 
 class LessonsListAdapter(var data: ArrayList<Lesson>): RecyclerView.Adapter<LessonsListAdapter.ViewHolder>() {
@@ -21,7 +21,7 @@ class LessonsListAdapter(var data: ArrayList<Lesson>): RecyclerView.Adapter<Less
         holder.binding.lessonDay.text = lesson.day
         holder.binding.lessonTimeStart.text = lesson.timeStart
         holder.binding.lessonTimeEnd.text = lesson.timeEnd
-        holder.itemView.setOnClickListener() {
+        holder.itemView.setOnClickListener {
             clickListener?.onClick(lesson)
         }
     }

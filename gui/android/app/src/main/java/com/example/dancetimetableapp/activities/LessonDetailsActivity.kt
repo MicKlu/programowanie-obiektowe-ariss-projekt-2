@@ -2,7 +2,7 @@ package com.example.dancetimetableapp.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.dancetimetableapp.Lesson
+import com.example.dancetimetableapp.model.Lesson
 import com.example.dancetimetableapp.databinding.ActivityLessonDetailsBinding
 
 class LessonDetailsActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.example.dancetimetableapp
+package com.example.dancetimetableapp.model
 
 import org.json.JSONObject
 import java.io.Serializable
