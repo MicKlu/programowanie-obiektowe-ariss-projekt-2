@@ -22,10 +22,4 @@ data class FilterParams(
         return true
     }
 
-    fun areEmpty(): Boolean {
-        if(this == FilterParams())
-            return true
-        return false
-    }
-
 }

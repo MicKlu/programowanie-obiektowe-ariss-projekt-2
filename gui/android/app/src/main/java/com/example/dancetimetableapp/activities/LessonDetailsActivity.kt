@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -36,7 +35,7 @@ class LessonDetailsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        lesson = intent.getSerializableExtra("lesson") as Lesson
+        lesson = intent.getSerializableExtra("com.example.dancetimetableapp.ExtraLesson") as Lesson
 
         binding.content.course.text = lesson.course
         binding.content.day.text = lesson.day
@@ -61,7 +60,7 @@ class LessonDetailsActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_lesson_details, menu)
 
         notificationIntent = Intent(applicationContext, LessonReminderReceiver::class.java).also {
-            it.putExtra("lesson", lesson)
+            it.putExtra("com.example.dancetimetableapp.ExtraLesson", lesson)
             it.action = "com.example.dancetimetableapp.SetReminder${lesson.hash()}"
         }
 

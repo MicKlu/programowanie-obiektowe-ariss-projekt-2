@@ -2,7 +2,6 @@ package com.example.dancetimetableapp.model
 
 import org.json.JSONObject
 import java.io.Serializable
-import kotlin.math.pow
 
 class Lesson: Serializable {
 
@@ -36,7 +35,9 @@ class Lesson: Serializable {
     }
 
     constructor(csv: String) {
-        val list = csv.substring(1, csv.length - 1).split("\",\"")
+        val list = csv.substring(1, csv.length - 1).split("\",\"").map {
+            it.replace("\"\"", "\"")
+        }
         day = list[0]
         time = list[1]
         course = list[2]

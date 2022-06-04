@@ -1,13 +1,11 @@
 package com.example.dancetimetableapp.datasources
 
 import android.content.Context
-import android.util.Log
 import com.example.dancetimetableapp.R
 import com.example.dancetimetableapp.model.FilterParams
 import com.example.dancetimetableapp.model.Lesson
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 
 class CachedDataSource(private val fileName: String) : DataSource {
 

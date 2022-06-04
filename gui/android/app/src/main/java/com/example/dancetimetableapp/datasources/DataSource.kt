@@ -1,7 +1,6 @@
 package com.example.dancetimetableapp.datasources
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import com.example.dancetimetableapp.model.FilterParams
 import com.example.dancetimetableapp.model.Lesson
 

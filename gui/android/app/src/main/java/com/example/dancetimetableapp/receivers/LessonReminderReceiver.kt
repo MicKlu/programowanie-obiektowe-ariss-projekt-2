@@ -1,6 +1,5 @@
 package com.example.dancetimetableapp.receivers
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,7 +7,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.dancetimetableapp.R
@@ -22,10 +20,10 @@ class LessonReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         createNotificationChannel(context)
 
-        val lesson = intent.getSerializableExtra("lesson") as Lesson
+        val lesson = intent.getSerializableExtra("com.example.dancetimetableapp.ExtraLesson") as Lesson
 
         val detailsIntent = Intent(context.applicationContext, LessonDetailsActivity::class.java).let {
-            it.putExtra("lesson", lesson)
+            it.putExtra("com.example.dancetimetableapp.ExtraLesson", lesson)
             it.action = "com.example.dancetimetableapp.ShowLessonDetails${lesson.hash()}"
             it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 

@@ -1,7 +1,6 @@
 package com.example.dancetimetableapp
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dancetimetableapp.datasources.CachedDataSource
@@ -28,7 +27,6 @@ object Repository {
         }
 
         if(!cachedDataSource.isUpToDate(context)) {
-            Log.d("dta", "Need fetch")
             scope.launch {
                 remoteDataSource.getCourses(context)?.let {
                     coursesLiveData.postValue(it)
@@ -46,7 +44,6 @@ object Repository {
         }
 
         if(!cachedDataSource.isUpToDate(context)) {
-            Log.d("dta", "Lessons need fetch")
             scope.launch {
                 remoteDataSource.getLessons(context, filterParams)?.let {
                     list.postValue(it)
