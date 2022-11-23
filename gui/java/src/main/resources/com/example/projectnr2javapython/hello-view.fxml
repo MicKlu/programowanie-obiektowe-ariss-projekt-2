@@ -22,6 +22,6 @@
    <Label text="Zajęcia:"/>
    <ListView fx:id="harmonogramList" onMouseClicked="#handleMouseClicked" prefHeight="200.0" prefWidth="200.0"
              VBox.vgrow="ALWAYS"/>
-   <Label text="Detali zajęć:"/>
+   <Label text="Szczegóły zajęć:"/>
    <ListView fx:id="detaleList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
 </VBox>
